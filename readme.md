@@ -70,9 +70,9 @@ For install fails, do the following:
 2) Checkout the recent git of fails.
 3) Install required modules by running:
 
-npm Install
+npm install
 
-in fails directory.
+in fails directory and in failsUI/www subdirectory.
 
 4) Rename config.js.example to config.js and configure the ports of the
 webserver, keys for authentification, ssl server keys, hostname
