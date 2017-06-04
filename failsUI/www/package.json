@@ -1,0 +1,20 @@
+{
+  "name": "FailsServerUI",
+  "version": "0.0.1",
+  "description": "Fancy Automated Internet Lecture System UI",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Marten Richter",
+    "email": "marten.richter@freenet.de"
+  },
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "pixi-particles": "^2.1.5",
+    "pixi.js": "^4.5.1",
+    "qrcode": "^0.8.1",
+    "screenfull": "^3.2.0",
+    "swiper": "^3.4.2"
+  }
+}

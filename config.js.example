@@ -1,0 +1,61 @@
+//config file for fails, includes also javascript code
+
+module.exports=function()
+{
+  var configobj= {
+    supersuperusers : ["root"], //always administrator!
+    serverjwtkey: 'typeinlongstring', //JWT key for notepads
+    serverscreenjwtkey: 'typeanotherlongstring', // JWT key for screen
+    screenips: ['192.168.1.1/24'], // allowed ip ranges for screens
+    privateKey: 'sslcert/server.key',
+    certificate: 'sslcert/server.crt',
+    http: true,  // true http, false https
+    httpredirecter: false, //if true opens additional http server that redirects to https
+    httpport: 80,
+    httpsport: 443,
+    hostname: "myhostname",
+    userauthentificate: function(username,password,callback) { // do here the user identification
+    //never log the password
+
+    //check password
+    //alternativel< username and password can be apikey and apikey secret
+    // and you generate token for the api. Then you should set a short expirationtime.
+
+      callback("error user not in db", {groups: [{group:"common",permgroup: "instructor"}],
+                 expirationtime: "3h",
+                  name: "Dr. Tony Tapsi", email: "tapsi@tony.com"}
+              /*groups: specifies the groups of lectures a user can access
+                group is the group's name and permgroup is the permission level,
+                name is the user name, email is the email address
+                these settings override fails user management system,
+                If you do not pass this object, then fails user database will
+                 be used instead.
+                Note the groups, name and email field will be stored in the
+                authentification token, so do not place confidential information
+                inside of these objects.
+                name is the name of the user including title (not username)
+                email is the users email, currently not used, but may be in the future
+                expirationtime sets the time until the authentification token expires.
+                */);
+
+    },
+    grouplist: function() {
+      return [{group:"common"}, {group:"terrorkitties"},{group:"talentedidiots"}];
+      // return a list of all groups relevant to fails
+      // this required for assigning a group to course
+    },
+    groupmembers: function(group) {
+      return {users:["tupito","knopke","grofatz"],
+          names:["Dr. Tony Tapso","Prof. Dr. Konrad Knopke","Großer Fatzke"]};
+      //return an array for the usernames in group group and a second array
+      // with the real names of these users.
+    },
+    syncscript: 'sync.bat',
+    locale: "de",
+    pushchanges: function(obj) {
+      console.log("Informed about changed/saved object:", obj);
+    }
+
+  };
+  return configobj;
+};

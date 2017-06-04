@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<!--
+For the modifications
+* Fails (Fancy Automated Internet Lecture System)
+* Copyright (C) 2015-2017  Marten Richter
+
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as
+* published by the Free Software Foundation, either version 3 of the
+* License, or (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+For the original template
+* Copyright © 2012-2015, Intel Corporation. All rights reserved.
+* Please see the included README.md file for license terms and conditions.
+-->
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="jqm/jquery.mobile-min.css">
+        <link rel="stylesheet" href="node_modules/swiper/dist/css/swiper.min.css">
+        <meta charset="UTF-8">
+        <title>FAILS UI</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+        <!--
+  * The "meta viewport" tag (below) helps your app size appropriately to a device's ideal viewport.
+  * Note that Windows device viewports work better when initialized using the @viewport CSS rule.
+  * For a quick overview of "meta viewport" and @viewport, see this article:
+  *   http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag
+  * To see how it works, try your app on a real device with and without a "meta viewport" tag.
+  * Additional useful references include:
+  *   http://www.quirksmode.org/mobile/viewports.html
+  *   http://www.quirksmode.org/mobile/metaviewport/devices.html
+  *   https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
+-->
+
+        <!-- <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1"> -->
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes, minimum-scale=1, maximum-scale=2"> -->
+
+        <style>
+            /* following three (cascaded) are equivalent to above three meta viewport statements */
+            /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html */
+            /* see http://dev.w3.org/csswg/css-device-adapt/ */
+                @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+                @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+                /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
+        </style>
+
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+
+        <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+        <!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work below -->
+        <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+
+        <!-- Recommended location for your JavaScript libraries -->
+        <!-- These library references (below) are just examples to give you the general idea... -->
+        <!-- <script src="lib/mc/hammer.js"></script> -->
+        <!-- <script src="lib/ft/fastclick.js"></script> -->
+
+        <script src="node_modules/pixi.js/dist/pixi.min.js"></script>
+        <script src="node_modules/pixi-particles/dist/pixi-particles.min.js"></script>
+        <script src="node_modules/screenfull/dist/screenfull.js"></script>
+        <script type="application/javascript" src="../socket.io/socket.io.js"></script>
+
+        <!--
+  * cordova.js is a phantom lib for "Cordova HTML5 web app," it does nothing in a "Standard HTML5 web app"
+  * Seeing a "Failed to load resource: net::ERR_FILE_NOT_FOUND" message caused by this "cordova.js" script?
+  * The cordova.js script is required if you convert your "Standard HTML5" project into a "Cordova" project.
+  * You can safely ignore the error or comment out this line if you will not be developing a Cordova app.
+-->
+        <script src="cordova.js" id="xdkJScordova_"></script>
+
+        <script src="js/app.js"></script>
+        <!-- for your event code, see README and file comments for details -->
+        <script src="js/init-app.js"></script>
+        <!-- for your init code, see README and file comments for details -->
+        <script src="xdk/init-dev.js"></script>
+        <!-- normalizes device and document ready events, see file for details -->
+        <script type="application/javascript" src="lib/jquery.min.js"></script>
+        <script type="application/javascript" src="jqm/jquery.mobile-min.js" data-ver="0"></script>
+        <script type="application/javascript" src="sidebar/js/hammer.js"></script>
+        <script type="application/javascript" src="sidebar/js/jquery.hammer.js"></script>
+        <script type="application/javascript" src="sidebar/js/swipe-hammer.js"></script>
+        <script type="application/javascript" src="sidebar/js/sidebar.js"></script>
+        <script type="application/javascript" src="js/failsdata.js"></script>
+        <script type="application/javascript" src="js/toolbox.js"></script>
+        <script type="application/javascript" src="js/blackboard.js"></script>
+        <script type="application/javascript" src="js/notepad.js"></script>
+        <script type="application/javascript" src="js/index_user_scripts.js"></script>
+        <script type="application/javascript" src="xdk/appdesigner/js/rest-of-space.js"></script>
+        <script type="application/javascript" src="xdk/ad/jqm_subpage.js"></script>
+
+        <script type="application/javascript" src="popup/popup.min.js"></script>
+    </head>
+
+    <body>
+        <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+        <!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work above -->
+        <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+        <div class="upage" id="mainpage" data-role="page">
+
+            <div class="upage-content" id="mainpagesub">
+                <div class="upage-outer">
+                    <div data-role="header" class="container-group inner-element uib_w_1" data-uib="jquery_mobile/header" data-ver="0">
+                        <h1>Welcome to Fancy Automated Internet Lecture System (FAILS)!</h1>
+                        <div class="widget-container wrapping-col single-centered"></div>
+                        <div class="widget-container content-area horiz-area wrapping-col left"></div>
+                        <div class="widget-container content-area horiz-area wrapping-col right"></div>
+                    </div>
+
+                    <div class="grid grid-pad urow uib_row_5 row-height-5" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_6 col-0_6-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col left">
+
+                                <div class="widget uib_w_7 d-margins" data-uib="media/text" data-ver="0">
+                                    <div class="widget-container left-receptacle"></div>
+                                    <div class="widget-container right-receptacle"></div>
+                                    <div>
+                                        <p>For opening a screen no password is required!</p>
+                                    </div>
+                                </div><a class="widget uib_w_2 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" href="screen.html">Open screen</a>
+                                <div class="widget uib_w_156 d-margins" data-uib="media/text" data-ver="0">
+                                    <div class="widget-container left-receptacle"></div>
+                                    <div class="widget-container right-receptacle"></div>
+                                    <div>
+                                        <p>Fancy Automated Internet Lecture System (FAILS) written by Marten Richter, Copyright (C) 2015-2017 Marten Richter
+                                          FAILS comes with ABSOLUTELY NO WARRANTY, see <a href="LICENSE.txt" target="_blank">license file </a> for details. This is free software, and you are welcome
+                                          to redistribute it under certain conditions;</p>
+                                        <p>&nbsp;</p>
+                                        <p> Copyrights and licenses of used libraries in their respective files and for the used template for webapplication see license/license.template.md .</p>
+                                    </div>
+                                </div><span class="uib_shim"></span>
+                            </div>
+                        </div>
+                        <div class="col uib_col_7 col-0_6-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+
+                                <div class="widget uib_w_6 d-margins" data-uib="media/text" data-ver="0">
+                                    <div class="widget-container left-receptacle"></div>
+                                    <div class="widget-container right-receptacle"></div>
+                                    <div>
+                                        <p>Please login for starting a lecture!</p>
+                                    </div>
+                                </div>
+                                <div class="table-thing with-label widget uib_w_3 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                    <label class="narrow-control label-top-left" for="usernameipt">Username:</label>
+                                    <input class="wide-control" placeholder="Your Username" type="text" id="usernameipt">
+                                </div>
+                                <div class="table-thing with-label widget uib_w_4 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                    <label class="narrow-control label-top-left" for="passwordipt">Password:</label>
+                                    <input class="wide-control" placeholder="Password" type="password" id="passwordipt">
+                                </div><a class="widget uib_w_5 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="arrow-r" id="loginbtn">Login</a>
+                                <div class="widget uib_w_131 d-margins messagestyle" data-uib="media/text" data-ver="0" id="loginmessage">
+                                    <div class="widget-container left-receptacle"></div>
+                                    <div class="widget-container right-receptacle"></div>
+                                    <div>
+                                        <p>Javascript starting...</p>
+                                    </div>
+                                </div><span class="uib_shim"></span>
+                            </div>
+                        </div>
+
+                        <span class="uib_shim"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="upage" id="tasksmenu" data-role="page">
+            <div class="upage-outer">
+                <div data-role="header" class="container-group inner-element uib_w_8" data-uib="jquery_mobile/header" data-ver="0">
+                    <h1></h1>
+                    <div class="widget-container wrapping-col single-centered">
+
+                        <div data-role="controlgroup" class="uib-jqm-flex widget uib_w_9 d-margins" data-uib="jquery_mobile/button_group" data-ver="0" data-type="horizontal">
+                            <a class="widget uib_w_10" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="edit">Lecture</a><a class="widget uib_w_11" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="gear"
+                            id="adminbutton">Adminstration</a>
+                            <a class="widget uib_w_81 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="power">Logout</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="upage-content content-area vertical-col" id="taskslecture">
+
+                    <div class="grid grid-pad urow uib_row_13 row-height-13" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_22 col-0_8-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+                                <div class="table-thing with-label widget uib_w_27 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                    <label class="narrow-control label-top-left" for="lecturename">Topic for lecture:</label>
+                                    <input class="wide-control" type="text" placeholder="Your lecture topic..." id="lecturename">
+                                </div>
+                                <div class="table-thing with-label widget uib_w_93 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                    <label class="narrow-control label-top-left">Topic and date:</label>
+                                    <div data-role="fieldgroup" class+="" "wide-control"="">
+                                        <select id="lectureslist">
+                                            <option>topic</option>
+                                        </select>
+                                    </div>
+                                </div><a class="widget uib_w_29 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="startlecture" data-icon="arrow-r">Start/Edit lecture...</a>
+
+                                <span class="uib_shim"></span>
+
+                                <div data-role="controlgroup" class="uib-jqm-flex widget uib_w_31 d-margins" data-uib="jquery_mobile/button_group" data-ver="0" data-type="horizontal">
+                                    <a class="widget uib_w_28 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="refresh" id="updatelecture">Update</a><a class="widget uib_w_32" data-uib="jquery_mobile/button" data-ver="0"
+                                    data-role="button" id="movebutton" href="#movelecture" data-rel="popup">Move</a>
+                                    <a class="widget uib_w_33" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="deletelecture">Delete</a>
+                                </div><span class="uib_shim"></span>
+                            </div>
+                        </div>
+                        <div class="col uib_col_21 col-0_4-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+                                <div class="table-thing with-label widget uib_w_94 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                    <label class="narrow-control label-top-left">Course:</label>
+                                    <div data-role="fieldgroup" class+="" "wide-control"="">
+                                        <select id="lectcourselist">
+                                            <option>courses</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="table-thing with-label widget uib_w_94 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                    <div data-role="fieldgroup" class+="" "wide-control"="">
+                                        <select id="lecttermlist" data-mini="true">
+                                            <option>semester</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <a class="widget uib_w_160 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="edit" id="uploadpictures">Edit Pictures...</a><span class="uib_shim"></span>
+                                <a class="widget uib_w_147 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="generatepdfs" data-icon="recycle">(Re-)Generate pdfs...</a>
+                                <div data-role="collapsible" class="no_wrap widget uib_w_150" data-uib="jquery_mobile/collapsible" data-ver="0" id="pdfuploadbox" data-mini="true">
+                                    <h4>PDF upload</h4>
+                                    <div class="col uib_col_29 single-col" data-uib="layout/col" data-ver="0">
+                                        <div class="widget-container content-area vertical-col">
+                                            <div class="widget uib_w_148 d-margins" data-uib="media/file_input" data-ver="0">
+                                                <input type="file" name="Choose PDF" accept="application/pdf,  application/x-pdf" id="fileuploadwidget">
+                                            </div><a class="widget uib_w_68 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="uploadpdfbutton" data-icon="arrow-u">Upload pdf</a><span class="uib_shim"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-role="controlgroup" class="uib-jqm-flex widget uib_w_151 d-margins" data-uib="jquery_mobile/button_group" data-ver="0" data-type="horizontal">
+                                    <a class="widget uib_w_152" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="pdfcolor" data-icon="arrow-d">PDF color</a><a class="widget uib_w_155 d-margins" data-uib="jquery_mobile/button" data-ver="0"
+                                    data-role="button" id="pdfupload" data-icon="arrow-d">PDF</a><a class="widget uib_w_154" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="arrow-d" id="pdfbw">PDF bw</a>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="uib_shim"></span>
+                    </div>
+                    <div data-role="popup" class="outer-element uib_w_164 uib-jqm-popup picturepopup" data-uib="jquery_mobile/popup" data-ver="0" id="pictureedit">
+                        <div data-role="header" class="ui-corner-top">
+                            <h1>Edit Pictures...</h1>
+                        </div>
+                        <a href="#" data-rel="back" data-role="button" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+                        <div class="col uib_col_37 single-col" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+
+                                <div class="tarea widget uib_w_162 d-margins" data-uib="media/text" data-ver="0" name="uib_w_162">
+                                    <div class="text-container">
+                                        <p>Pictures of the course:</p>
+                                    </div>
+                                </div>
+
+                                <!-- Slider main container -->
+                                <div class="swiper-container pictureupload-top">
+                                    <!-- Additional required wrapper -->
+                                    <div class="swiper-wrapper">
+                                        <!-- Slides -->
+                                        <div class="swiper-slide">
+                                            <div class="grid grid-pad urow uib_row_14 row-height-14" data-uib="layout/row" data-ver="0">
+                                                <div class="col uib_col_34 col-0_12-12" data-uib="layout/col" data-ver="0">
+                                                    <div class="widget-container content-area vertical-col">
+                                                        <div class="tarea widget uib_w_161 d-margins" data-uib="media/text" data-ver="0" name="uib_w_161">
+                                                            <div class="widget-container left-receptacle"></div>
+                                                            <div class="widget-container right-receptacle"></div>
+                                                            <div class="text-container">
+                                                                <p>Upload a new picture for this lecture:</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="widget uib_w_148 d-margins" data-uib="media/file_input" data-ver="0">
+                                                            <input type="file" name="Choose Picture" accept="image/png,  image/jpeg" id="pictureuploadwidget">
+                                                        </div>
+                                                        <a class="widget uib_w_68 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="uploadpicturebutton" data-icon="arrow-u">Upload picture...</a><span class="uib_shim"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/2)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/3)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/4)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/5)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/6)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/7)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/8)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/9)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/10)"></div> -->
+                                    </div>
+                                    <!-- If we need pagination -->
+                                    <div class="swiper-pagination pictureuploadpagination"></div>
+                                    <!-- If we need navigation buttons -->
+                                    <div class="swiper-button-prev pictureuploadprev"></div>
+                                    <div class="swiper-button-next pictureuploadnext"></div>
+                                    <!-- If we need scrollbar -->
+                                    <!-- <div class="swiper-scrollbar"></div>  -->
+
+                                </div>
+                                <div class="swiper-container pictureupload-thumb">
+                                    <!-- Additional required wrapper -->
+                                    <div class="swiper-wrapper">
+                                        <!-- Slides -->
+                                        <div class="swiper-slide"></div>
+
+                                        <!--     <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/2)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/3)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/4)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/5)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/6)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/7)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/8)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/9)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/10)"></div>-->
+                                    </div>
+
+                                    <!-- If we need scrollbar -->
+                                    <!-- <div class="swiper-scrollbar"></div>  -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="tasksadmin" class="upage-content vertical-col hidden">
+                    <div class="grid grid-pad urow uib_row_11" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_17 col-0_6-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+
+                                <div data-role="collapsible-set" class="no_wrap widget uib_w_83 d-margins" data-uib="jquery_mobile/accordion" data-ver="0" data-collapsed-icon="plus" data-expanded-icon="minus">
+                                    <div data-role="collapsible" class="no_wrap widget uib_w_84" data-uib="jquery_mobile/collapsible" data-ver="0" id="editsemesters">
+                                        <h4>Edit semesters</h4>
+                                        <div class="col uib_col_25 single-col" data-uib="layout/col" data-ver="0">
+                                            <div class="widget-container content-area vertical-col">
+                                                <div class="table-thing with-label widget uib_w_34 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                                    <label class="narrow-control label-top-left" for="termname">Semester:</label>
+                                                    <input class="wide-control" placeholder="New semester name" type="text" id="termname">
+                                                </div>
+                                                <div class="table-thing with-label widget uib_w_96 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                                    <label class="narrow-control label-inline">Current semester:</label>
+                                                    <div data-role="fieldgroup" class+="" "wide-control"="">
+                                                        <select id="termlist">
+                                                            <option>semesters</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <a class="widget uib_w_38 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="plus" id="addupdatesemeter">Add/Update semester</a><a class="widget uib_w_42 d-margins" data-uib="jquery_mobile/button"
+                                                data-ver="0" data-role="button" data-icon="delete" id="deletecurterm">Delete current semester</a><span class="uib_shim"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div data-role="collapsible" class="no_wrap widget uib_w_85" data-uib="jquery_mobile/collapsible" data-ver="0" id="editusers">
+                                        <h4>Edit users</h4>
+                                        <div class="col uib_col_26 single-col" data-uib="layout/col" data-ver="0">
+                                            <div class="widget-container content-area vertical-col">
+                                                <div class="table-thing with-label widget uib_w_52 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                                    <label class="narrow-control label-top-left" for="newusername">Username :</label>
+                                                    <input class="wide-control" placeholder="Username" type="text" id="newusername">
+                                                </div>
+
+                                                <div class="table-thing with-label widget uib_w_97 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                                    <label class="narrow-control label-inline">User:</label>
+                                                    <div data-role="fieldgroup" class+="" "wide-control"="">
+                                                        <select id="userlist">
+                                                            <option>Option 1</option>
+                                                            <option>Option 2</option>
+                                                            <option>Option 3</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="table-thing with-label widget uib_w_98 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                                    <label class="narrow-control label-top-left" for="fullusername">Full name (incl. title)</label>
+                                                    <input class="wide-control" type="text" placeholder="The name and title" id="fullusername">
+                                                </div>
+                                                <div class="table-thing with-label widget uib_w_113 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                                    <label class="narrow-control label-top-left" for="useremail">Email address:</label>
+                                                    <input class="wide-control" type="email" placeholder="you@uni.com" id="useremail">
+                                                </div>
+                                                <div class="table-thing with-label widget uib_w_132 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                                    <label class="narrow-control label-inline">Userpermissions:</label>
+                                                    <div data-role="fieldgroup" class+="" "wide-control"="">
+                                                        <select id="userpermissions">
+                                                            <option>instructor</option>
+                                                            <option>maintenance</option>
+                                                            <option>admin</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div data-role="controlgroup" class="uib-jqm-flex widget uib_w_63 d-margins" data-uib="jquery_mobile/button_group" data-ver="0" data-type="horizontal">
+                                                    <a class="widget uib_w_64" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="refresh" id="updateuser">Add/Update user</a><a class="widget uib_w_65" data-uib="jquery_mobile/button"
+                                                    data-ver="0" data-role="button" data-icon="delete" id="deleteuser">Delete user</a>
+                                                </div><span class="uib_shim"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <span class="uib_shim"></span>
+                            </div>
+                        </div>
+                        <div class="col uib_col_18 col-0_6-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col center">
+
+                                <div data-role="collapsible" class="no_wrap widget uib_w_99" data-uib="jquery_mobile/collapsible" data-ver="0">
+                                    <h4>Edit courses:</h4>
+                                    <div class="col uib_col_27 single-col" data-uib="layout/col" data-ver="0">
+                                        <div class="widget-container content-area vertical-col left">
+                                            <div class="table-thing with-label widget uib_w_40 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                                <label class="narrow-control label-top-left" for="coursetitle">Course:</label>
+                                                <input class="wide-control" placeholder="Course title..." type="text" id="coursetitle">
+                                            </div>
+                                            <div class="table-thing with-label widget uib_w_101 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                                <label class="narrow-control label-top-left">Courses:</label>
+                                                <div data-role="fieldgroup" class+="" "wide-control"="">
+                                                    <select id="courselist">
+                                                        <option>course</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-thing with-label widget uib_w_133 d-margins" data-uib="jquery_mobile/input" data-ver="0">
+                                                <label class="narrow-control label-top-left" for="coursewebsite">Website (short for QR-Code):</label>
+                                                <input class="wide-control" placeholder="http://tiny.url" type="url" id="coursewebsite">
+                                            </div>
+                                            <div class="widget uib_w_102 d-margins" data-uib="media/text" data-ver="0" id="courseinformation">
+                                                <div class="widget-container left-receptacle"></div>
+                                                <div class="widget-container right-receptacle"></div>
+                                                <div>
+                                                    <p>Instructors:</p>
+                                                </div>
+                                            </div>
+                                            <div class="table-thing with-label widget uib_w_100 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                                <label class="narrow-control label-top-left">Group:</label>
+                                                <div data-role="fieldgroup" class+="" "wide-control"="">
+                                                    <select id="grouplist">
+                                                        <option>Groups</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="table-thing with-label widget uib_w_100 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                                <label class="narrow-control label-top-left">Add/Remove Instructor:</label>
+                                                <div data-role="fieldgroup" class+="" "wide-control"="">
+                                                    <select id="instructorlist">
+                                                        <option>Instructors</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div data-role="controlgroup" class="uib-jqm-flex widget uib_w_103 d-margins" data-uib="jquery_mobile/button_group" data-ver="0" data-type="horizontal">
+                                                <a class="widget uib_w_104" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="plus" id="addinstructor">Add instructor...</a><a class="widget uib_w_106" data-uib="jquery_mobile/button"
+                                                data-ver="0" data-role="button" data-icon="delete" id="removeinstructor">Remove instructor</a>
+                                            </div>
+                                            <div data-role="controlgroup" class="uib-jqm-flex widget uib_w_49 d-margins" data-uib="jquery_mobile/button_group" data-ver="0" data-type="horizontal">
+                                                <a class="widget uib_w_50" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="refresh" id="addupdatecourse">Add/Update course</a><a class="widget uib_w_51" data-uib="jquery_mobile/button"
+                                                data-ver="0" data-role="button" data-icon="delete" id="deletecourse">Delete course</a>
+                                            </div><span class="uib_shim"></span>
+                                        </div>
+                                    </div>
+                                </div><span class="uib_shim"></span>
+                            </div>
+                        </div>
+                        <span class="uib_shim"></span>
+                    </div>
+
+                </div>
+
+                <div data-role="popup" class="outer-element uib_w_163 padded-col uib-jqm-popup" data-uib="jquery_mobile/popup" data-ver="0" id="movelecture">
+                    <div data-role="header" class="ui-corner-top">
+                        <h1>Move lecture to...</h1>
+                    </div><a href="#" data-rel="back" data-role="button" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+
+                    <div class="col uib_col_36 single-col" data-uib="layout/col" data-ver="0">
+                        <div class="widget-container content-area vertical-col">
+
+                            <div class="widget uib_w_115 d-margins" data-uib="media/text" data-ver="0" id="movelecturetext">
+                                <div class="widget-container left-receptacle"></div>
+                                <div class="widget-container right-receptacle"></div>
+                                <div>
+                                    <p>Lecture to move:</p>
+                                </div>
+                            </div>
+                            <div class="table-thing with-label widget uib_w_116 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                <label class="narrow-control label-top-left">Destination course:</label>
+                                <div data-role="fieldgroup" class+="" "wide-control"="">
+                                    <select id="destcourselist">
+                                        <option>Dest course 1</option>
+                                        <option>Dest course 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="table-thing with-label widget uib_w_117 d-margins" data-uib="jquery_mobile/select" data-ver="0">
+                                <label class="narrow-control label-top-left">Destination semester:</label>
+                                <div data-role="fieldgroup" class+="" "wide-control"="">
+                                    <select id="desttermlist">
+                                        <option>Dest sem 1</option>
+                                        <option>Dest sem 2</option>
+                                    </select>
+                                </div>
+                            </div><a class="widget uib_w_118 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="movelecturebtn">Move lecture....</a><a class="widget uib_w_119 d-margins" data-uib="jquery_mobile/button" data-ver="0"
+                            data-role="button" id="copylecturebtn">Copy lecture...</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="upage Notepadbackground" id="notepad" data-role="page">
+
+            <div class="upage-content wrapping-col left" id="notepadsub">
+                <div class="upage-outer">
+                    <div class="inner-element uib_w_88 uib_sidebar leftbar thumb-bg bar-gutter bar-bg-std" data-uib="layout/left_sidebar" data-ver="1" data-anim="{'style':'overlap', 'v':320, 'side':'left', 'dur':200, 'io':true}" id="notepadbar">
+                        <div class="sidebar-content content-area vertical-col">
+
+                            <a class="widget uib_w_89 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="power" id="logoutpublish">Logout and publish...</a>
+                            <a class="widget uib_w_90 d-margins" data-uib="jquery_mobile/button" data-ver="0" data-role="button" data-icon="action" id="returnlecture">Return to lecture...</a><a class="widget uib_w_145 d-margins" data-uib="jquery_mobile/button"
+                            data-ver="0" data-role="button" id="fullscreenbtn" data-mini="true">Toggle fullscreen</a>
+
+                            <div class="ui-checkbox widget uib_w_91 d-margins" data-uib="jquery_mobile/checkbox" data-ver="0">
+                                <label>Cast to screens
+                                    <input type="checkbox" data-mini="true" id="casttoscreens">
+                                </label>
+                            </div>
+
+                            <div class="ui-checkbox widget uib_w_146 d-margins" data-uib="jquery_mobile/checkbox" data-ver="0">
+                                <label>Notepad is screen
+                                    <input type="checkbox" data-mini="true" id="notepadisscreen">
+                                </label>
+                            </div>
+
+
+
+                            <div class="ui-checkbox widget uib_w_91 d-margins" data-uib="jquery_mobile/checkbox" data-ver="0">
+                                <label>Draw with touch
+                                    <input type="checkbox" data-mini="true" id="touchdraw">
+                                </label>
+                            </div>
+
+                            <div class="widget uib_w_135 ui-content no_wrap outset-margin d-margins rest-of-height" data-uib="jquery_mobile/listview" data-ver="0">
+                                <ul data-role="listview" id="screenlist">
+                                    <li class="widget uib_w_136" data-uib="jquery_mobile/listitem" data-ver="0" data-role="list-divider"><span>Available screens:</span>
+                                    </li>
+                                    <li class="widget uib_w_141" data-uib="jquery_mobile/listitem" data-ver="0"><span>Listitem</span><span class="ui-li-count">Add</span>
+                                    </li>
+                                    <li class="widget uib_w_140" data-uib="jquery_mobile/listitem" data-ver="0" data-role="list-divider"><span>Current screens:</span>
+                                    </li>
+                                    <li class="widget uib_w_142" data-uib="jquery_mobile/listitem" data-ver="0"><span>Listitem</span><span class="ui-li-count">Delete</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="inner-element uib_w_165 uib_crossbar botbar f bar-bg-std thumb-bg bar-gutter" data-uib="layout/bottom_crossbar" data-ver="1" data-anim="{'style':'overlap', 'v':300, 'side':'bottom', 'dur':200}" id="notepadbarbottom">
+                        <div class="sidebar-content content-area vertical-col">
+                            <div data-role="controlgroup" data-mini="true" data-type="horizontal">
+                                <a class="widget uib_w_168" data-uib="jquery_mobile/button" data-ver="0" data-role="button" id="addpicturebuttonnotepad" data-icon="plus">Add Picture...</a><a class="widget uib_w_169" data-uib="jquery_mobile/button" data-ver="0"
+                                data-role="button" id="closepicturebuttonnotepad" data-icon="delete">Close</a>
+                            </div>
+                            <div class="swiper-container pictureselect-top">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    <!-- Slides
+
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/2)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/3)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/4)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/5)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/6)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/7)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/8)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/9)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/10)"></div>  -->
+                                </div>
+                                <!-- If we need pagination -->
+                                <div class="swiper-pagination pictureselectpagination"></div>
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev pictureselectprev"></div>
+                                <div class="swiper-button-next pictureselectnext"></div>
+                                <!-- If we need scrollbar -->
+                                <!-- <div class="swiper-scrollbar"></div>   -->
+
+                            </div>
+                            <div class="swiper-container pictureselect-thumb">
+                                <!-- Additional required wrapper  -->
+                                <div class="swiper-wrapper">
+                                    <!-- Slides
+
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/2)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/3)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/4)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/5)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/6)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/7)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/8)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/9)"></div>
+                                    <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/10)"></div> -->
+                                </div>
+
+                                <!-- If we need scrollbar -->
+                                <!-- <div class="swiper-scrollbar"></div>  -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="upage vertical-col left" id="servererror" data-role="page" data-dialog="true">
+            <div class="upage-outer">
+                <div data-role="header" class="container-group inner-element uib_w_144" data-uib="jquery_mobile/header" data-ver="0">
+                    <h1>Server communication error</h1>
+                    <div class="widget-container wrapping-col single-centered"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col left"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col right"></div>
+                </div>
+                <div id="servererrorsub" class="upage-content vertical-col left ">
+                    <div class="widget uib_w_143 d-margins messagestyle" data-uib="media/text" data-ver="0" id="servererrortext">
+                        <div class="widget-container left-receptacle"></div>
+                        <div class="widget-container right-receptacle"></div>
+                        <div>
+                            <p>Server communication error:</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="application/javascript" src="node_modules/swiper/dist/js/swiper.jquery.min.js"></script>
+    </body>
+
+</html>
