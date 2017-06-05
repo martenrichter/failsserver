@@ -514,11 +514,8 @@
         this.colorwheel = new CircleButtonsColl(this.blackboard,/*75*/80);
         //this.addChild(this.colorwheel);
         var colorwheelcolors = [0xFFFFFF,0x844D18,0xBFBFBF ,0x000000, 0xFF7373,
-				0xFF0000,// for HS
                                 0xFFAC62,0xFFF284,0xCAFEB8,
-				0x00CD00, // for HS
 				0x99C7FF, 0x2F74D0,
-				0x0018CD, // for HS
 				0xAE70ED,0xFE8BF0,0xFFA8A8];
         var it=0;
         for (it=0;it<colorwheelcolors.length;it++) {
