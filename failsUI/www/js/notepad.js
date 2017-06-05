@@ -235,6 +235,9 @@
             case 0x26: { // arrowUp
                 this.blackboard.scrollboardKeys(0,-0.05);
             } break;
+            case 0x44: { // "d"
+              this.blackboard.toggleDebugView();
+           }break;
 
         };
 

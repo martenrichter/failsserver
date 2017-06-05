@@ -61,6 +61,7 @@
 
         this.fpstext.position.x=0;
         this.fpstext.position.y=0;
+        this.fpstext.visible=false;
         this.fpsstarttime= performance.now();
         this.fpsnum = 0;
 
@@ -754,6 +755,16 @@
         if (this.outgodispatcher) this.outgodispatcher.scrollBoard(null,0,
                                          this.curkeyscroll);
 
+
+    };
+
+    Blackboard.prototype.toggleDebugView=function()
+    {
+      if (this.fpstext.visible) {
+        this.fpstext.visible=false;
+      } else {
+        this.fpstext.visible=true;
+      }
 
     };
 
