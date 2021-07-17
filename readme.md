@@ -1,6 +1,6 @@
 Note of end of life
 ===================
-Fails is now deprecated. It is successor fails components is currently under active development!
+Fails is now deprecated. It's successor fails components is currently under active development!
 
 License
 ========
