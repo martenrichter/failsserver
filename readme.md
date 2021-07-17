@@ -1,3 +1,7 @@
+Note of end of life
+===================
+Fails is now deprecated. It is successor fails components is currently under active development!
+
 License
 ========
 Fails (Fancy Automated Internet Lecture System)
